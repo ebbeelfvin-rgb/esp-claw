@@ -1,4 +1,4 @@
-# LilyGO T-Display-P4 Board Support
+# Lilygo T-Display-P4 Board Support
 
 ## **English | [中文](./README_CN.md)**
 
@@ -24,7 +24,7 @@ Adapted custom devices:
 | --- | --- |
 | `board_info.yaml` | Board name, chip, manufacturer, and description metadata. |
 | `board_devices.yaml` | Board manager device list and component dependencies. |
-| `board_peripherals.yaml` | Intentionally empty because the LilyGO driver owns the T-Display-P4 buses and power sequence. |
+| `board_peripherals.yaml` | Intentionally empty because the Lilygo driver owns the T-Display-P4 buses and power sequence. |
 | `Kconfig.projbuild` | Screen type, camera type, pixel format, board type, and board version options. |
 | `sdkconfig.defaults.board` | Default configuration for flash, PSRAM, display support, Hosted Wi-Fi, camera, and logs. |
 | `setup_device.cpp` | Custom device implementation. |

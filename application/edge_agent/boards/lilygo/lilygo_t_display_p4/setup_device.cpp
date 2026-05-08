@@ -8,14 +8,12 @@
 #include "esp_board_manager_defs.h"
 #include "esp_check.h"
 #include "esp_err.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
 #include "gen_board_device_custom.h"
 #include "lilygo_device_driver_library.h"
 
-namespace lilygo_t_display_p4 {
+namespace esp_claw_lilygo_t_display_p4 {
 
-constexpr char kTag[] = "lilygo_t_display_p4";
+constexpr char kTag[] = "esp_claw_lilygo_t_display_p4";
 constexpr int kReadyTimeoutMs = 5000;
 constexpr int kReadyPollMs = 10;
 constexpr uint8_t kDefaultBrightnessPercent = 100;
@@ -177,9 +175,9 @@ int ScreenInit(void*, int, void** device_handle) {
   ESP_RETURN_ON_FALSE(GetScreenReadyStatus(driver), ESP_ERR_TIMEOUT, kTag,
       "GetScreenReadyStatus failed");
 
-  esp_err_t ret = esp_board_device_update_config(
-      ESP_BOARD_DEVICE_NAME_DISPLAY_LCD, &kScreenConfig);
-  ESP_RETURN_ON_ERROR(ret, kTag, "esp_board_device_update_config failed");
+  esp_err_t ret = esp_board_device_override_config(
+      ESP_BOARD_DEVICE_NAME_DISPLAY_LCD, &kScreenConfig, sizeof(kScreenConfig));
+  ESP_RETURN_ON_ERROR(ret, kTag, "esp_board_device_override_config failed");
 
   *device_handle = &g_screen_handles;
   return ESP_OK;
@@ -209,11 +207,12 @@ int BrightnessInit(void*, int, void** device_handle) {
 
 int BrightnessDeinit(void*) { return ESP_OK; }
 
-}  // namespace lilygo_t_display_p4
+}  // namespace esp_claw_lilygo_t_display_p4
 
-CUSTOM_DEVICE_IMPLEMENT(power_ctrl, lilygo_t_display_p4::PowerInit,
-    lilygo_t_display_p4::PowerDeinit);
-CUSTOM_DEVICE_IMPLEMENT(display_lcd, lilygo_t_display_p4::ScreenInit,
-    lilygo_t_display_p4::ScreenDeinit);
-CUSTOM_DEVICE_IMPLEMENT(lcd_brightness, lilygo_t_display_p4::BrightnessInit,
-    lilygo_t_display_p4::BrightnessDeinit);
+CUSTOM_DEVICE_IMPLEMENT(power_ctrl, esp_claw_lilygo_t_display_p4::PowerInit,
+    esp_claw_lilygo_t_display_p4::PowerDeinit);
+CUSTOM_DEVICE_IMPLEMENT(display_lcd, esp_claw_lilygo_t_display_p4::ScreenInit,
+    esp_claw_lilygo_t_display_p4::ScreenDeinit);
+CUSTOM_DEVICE_IMPLEMENT(lcd_brightness,
+    esp_claw_lilygo_t_display_p4::BrightnessInit,
+    esp_claw_lilygo_t_display_p4::BrightnessDeinit);
