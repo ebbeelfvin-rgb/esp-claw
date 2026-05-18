@@ -1,3 +1,5 @@
+# For PRs, please do not modify this file.
+
 .build_template:
   stage: build
   tags:
