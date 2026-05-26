@@ -21,7 +21,6 @@ Prefer several consecutive `read_file` tool calls in the same step instead of re
 - Read every Lua module doc needed by the task before code generation.
 - Read the closest builtin test script source as the implementation pattern.
 - Activate `builtin_lua_modules` and use its table to find the needed doc path.
-- Batch-read module docs with `read_file("/system/scripts/docs/<doc-file>")`.
 - If output ends with `[read_file truncated: ...]`, treat it as incomplete and do not infer missing APIs.
 
 Builtin patterns:
