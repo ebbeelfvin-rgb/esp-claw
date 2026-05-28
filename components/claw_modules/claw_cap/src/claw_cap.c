@@ -12,6 +12,7 @@
 
 #include "cJSON.h"
 #include "esp_log.h"
+#include "esp_attr.h"
 #include "esp_heap_caps.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/semphr.h"
@@ -70,7 +71,7 @@ typedef struct {
     size_t group_capacity;
 } claw_cap_runtime_t;
 
-static claw_cap_runtime_t s_runtime = {0};
+static EXT_RAM_BSS_ATTR claw_cap_runtime_t s_runtime = {0};
 
 static bool claw_cap_is_llm_visible(const claw_cap_descriptor_slot_t *slot,
                                     const char *session_id);
