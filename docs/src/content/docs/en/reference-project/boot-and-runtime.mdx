@@ -3,7 +3,8 @@ title: Boot and runtime wiring
 description: Order from app_main until subsystems are ready
 ---
 
-import { Steps, FileTree, LinkCard } from '@astrojs/starlight/components';
+import { Steps, FileTree } from '@astrojs/starlight/components';
+import { LinkCard } from 'starlight-theme-nova/components'
 import LinkToSource from '@/components/LinkToSource.astro';
 
 This walkthrough uses sample app `application/edge_agent`, covering entry <LinkToSource relativePath="application/edge_agent/main/main.c" /> and wiring in <LinkToSource relativePath="components/common/app_claw/app_claw.c" />.
