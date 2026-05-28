@@ -17,5 +17,3 @@ peripherals:
         with_dma: true  # RMT peripheral can connect to DMA channel in esp32s3
         io_loop_back: false
         io_od_mode: false
-        allow_pd: false
-        init_level: false
