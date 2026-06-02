@@ -5,12 +5,12 @@ dependencies:
     public: true
   espressif/esp_wifi_remote:
     version: '>=0.10,<2.0'
-    rules:
-    - if: target in [esp32p4]
-  espressif/esp_hosted:
-    version: 2.12.3
-    rules:
-    - if: target in [esp32p4]
+#    rules:
+#    - if: target in [esp32p4]
+#  espressif/esp_hosted:
+#    version: 2.12.3
+#    rules:
+#    - if: target in [esp32p4]
 
   espressif2022/esp_emote_expression:
     version: ^1.0.0
