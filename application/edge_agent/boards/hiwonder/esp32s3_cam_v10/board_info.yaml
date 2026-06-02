@@ -1,0 +1,4 @@
+board: esp32s3_cam_v10
+chip: esp32s3
+description: "Hiwonder ESP32S3-CAM V1.0 — AI Camera Module with GC2145, 8MB Flash, 8MB OPI PSRAM. Used as the brain (hjärna) of SIGGE hexabot."
+manufacturer: "Hiwonder"

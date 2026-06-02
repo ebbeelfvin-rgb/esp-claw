@@ -1,0 +1,70 @@
+version: 1.0.0
+# Devices for Hiwonder ESP32S3-CAM V1.0
+devices:
+
+  - name: camera
+    chip: gc2145
+    type: camera
+    sub_type: dvp
+    version: default
+    init_skip: false
+    config:
+      dvp_config:
+        reset_io: -1
+        pwdn_io: -1
+        vsync_io: 6
+        de_io: 7
+        pclk_io: 13
+        xclk_io: 15
+        xclk_freq: 15000000
+        data_width: CAM_CTLR_DATA_WIDTH_8
+        data_io:
+          data_io_0: 11
+          data_io_1: 9
+          data_io_2: 8
+          data_io_3: 10
+          data_io_4: 12
+          data_io_5: 18
+          data_io_6: 17
+          data_io_7: 16
+    peripherals:
+      - name: i2c_master
+        frequency: 100000
+
+  - name: boot_button
+    type: button
+    sub_type: gpio
+    version: default
+    config:
+      active_level: 0
+      enable_power_save: false
+      disable_pull: false
+      long_press_time: 1500
+      short_press_time: 100
+    peripherals:
+      - name: gpio_boot_button
+
+  - name: status_led
+    chip: gpio_led
+    type: gpio_ctrl
+    version: default
+    config:
+      active_level: 1
+      default_level: 0
+    init_skip: true
+    peripherals:
+      - name: gpio_status_led
+
+  - name: hexapod_uart
+    chip: custom
+    type: custom
+    version: default
+    init_skip: true
+    config:
+      port: 1
+      tx_gpio: 47
+      rx_gpio: 48
+      baud_rate: 115200
+      kropp_rx: 18
+      kropp_tx: 19
+      description: "UART to hexapod body. S3 GPIO47(TX)->Kropp IO18, S3 GPIO48(RX)->Kropp IO19 via J5 connector."

@@ -1,5 +1,27 @@
 [
   {
+    "id": "startup_run_boot_button",
+    "description": "Start boot button monitor — håll in i 1.5s för omstart.",
+    "enabled": false,
+    "consume_on_match": false,
+    "ack": "boot button monitor started",
+    "match": {
+      "source_cap": "app_claw",
+      "event_type": "startup",
+      "event_key": "boot_completed",
+      "content_type": "trigger"
+    },
+    "actions": [
+      {
+        "type": "run_script",
+        "input": {
+          "path": "/fatfs/scripts/boot_button.lua",
+          "args": {}
+        }
+      }
+    ]
+  },
+  {
     "id": "startup_run_led_strip_dim_white",
     "description": "Set LED strip to low-brightness white once the device finishes booting.",
     "enabled": false,

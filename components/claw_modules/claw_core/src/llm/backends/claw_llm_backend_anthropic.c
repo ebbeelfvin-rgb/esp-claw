@@ -249,8 +249,13 @@ static cJSON *convert_messages_to_anthropic(cJSON *messages)
                         cJSON_Delete(out);
                         return NULL;
                     }
+                    char fallback_id[32];
+                    if (!tid || !tid[0]) {
+                        snprintf(fallback_id, sizeof(fallback_id), "tool_fallback_%d", idx);
+                        tid = fallback_id;
+                    }
                     cJSON_AddStringToObject(block, "type", "tool_result");
-                    cJSON_AddStringToObject(block, "tool_use_id", tid ? tid : "");
+                    cJSON_AddStringToObject(block, "tool_use_id", tid);
                     cJSON_AddStringToObject(block, "content", content);
                     cJSON_AddBoolToObject(block, "is_error", is_error);
                     cJSON_AddItemToArray(tool_blocks, block);

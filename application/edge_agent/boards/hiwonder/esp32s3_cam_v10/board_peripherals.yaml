@@ -1,0 +1,49 @@
+version: 1.0.0
+peripherals:
+
+  - name: rmt_tx
+    type: rmt
+    role: tx
+    config:
+      gpio_num: 38
+      clk_src: RMT_CLK_SRC_DEFAULT
+      resolution_hz: 10000000
+      mem_block_symbols: 64
+      trans_queue_depth: 4
+      intr_priority: 1
+      flags:
+        invert_out: false
+        with_dma: true
+
+  - name: i2c_master
+    type: i2c
+    role: master
+    config:
+      port: 0
+      pins:
+        sda: 4
+        scl: 5
+
+  - name: gpio_status_led
+    type: gpio
+    version: default
+    role: io
+    config:
+      pin: 38
+      mode: GPIO_MODE_OUTPUT
+      pull_up: false
+      pull_down: false
+      intr_type: GPIO_INTR_DISABLE
+      default_level: 0
+
+  - name: gpio_boot_button
+    type: gpio
+    version: default
+    role: io
+    config:
+      pin: 0
+      mode: GPIO_MODE_INPUT
+      pull_up: true
+      pull_down: false
+      intr_type: GPIO_INTR_DISABLE
+      default_level: 1

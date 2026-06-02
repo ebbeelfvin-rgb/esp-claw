@@ -1,22 +1,22 @@
 ## IDF Component Manager Manifest File
 dependencies:
   espressif/esp_board_manager:
-    version: "^0.5.10"
+    version: ^0.5.10
     public: true
   espressif/esp_wifi_remote:
-    version: ">=0.10,<2.0"
+    version: '>=0.10,<2.0'
     rules:
-      - if: "target in [esp32p4]"
+    - if: target in [esp32p4]
   espressif/esp_hosted:
-    version: "2.12.3"
+    version: 2.12.3
     rules:
-      - if: "target in [esp32p4]"
+    - if: target in [esp32p4]
 
   espressif2022/esp_emote_expression:
-    version: "^1.0.0"
+    version: ^1.0.0
 
   espressif2022/esp_emote_gfx:
-    version: "3.0.2"
+    version: 3.0.2
 
   app_claw:
     path: ../../../components/common/app_claw
@@ -33,7 +33,7 @@ dependencies:
   emote:
     path: ../../../components/common/emote
     rules:
-      - if: $CONFIG{ESP_BOARD_DEV_DISPLAY_LCD_SUPPORT} == True
+    - if: $CONFIG{ESP_BOARD_DEV_DISPLAY_LCD_SUPPORT} == True
 
   http_reuse:
     path: ../../../components/common/http_reuse
@@ -51,3 +51,4 @@ dependencies:
     path: ../../../components/common/esp_video
     matches:
     - if: $CONFIG{ESP_BOARD_DEV_CAMERA_SUPPORT} == True
+  espressif/esp32-camera: ^2.0.0
