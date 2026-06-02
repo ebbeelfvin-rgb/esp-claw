@@ -5,6 +5,7 @@ description: Repo layering, runtime dataflow, and documentation navigation for E
 
 import { FileTree } from '@astrojs/starlight/components';
 import ClawRunDiagram from "@/assets/images/claw_run.svg?url";
+import LinkToSource from '@/components/LinkToSource.astro';
 
 ## System overview
 
@@ -12,10 +13,10 @@ The repo follows an **“example app + shared components”** layout: `applicati
 
 Today the code falls into four areas:
 
-- **App assembly:** `application/edge_agent/main` and `components/common` — boot, networking, settings, the HTTP provisioning UI, and app-level module registration.
-- **Capabilities:** `components/claw_capabilities` — outward-facing capabilities such as IM, MCP client/server, Lua runtime, scheduling, files, time, web search, and more.
-- **Runtime core:** `components/claw_modules` — Agent infrastructure: core context, capability registration, event routing, memory, and skills.
-- **Device & script extensions:** `components/lua_modules` — exposes displays, cameras, audio, buttons, GPIO, PWM, storage, and other peripherals to Lua and the Agent.
+- **App assembly:** <LinkToSource relativePath="application/edge_agent/main/" /> and <LinkToSource relativePath="components/common/" /> — boot, networking, settings, the HTTP provisioning UI, and app-level module registration.
+- **Capabilities:** <LinkToSource relativePath="components/claw_capabilities/" /> — outward-facing capabilities such as IM, MCP client/server, Lua runtime, scheduling, files, time, web search, and more.
+- **Runtime core:** <LinkToSource relativePath="components/claw_modules/" /> — Agent infrastructure: core context, capability registration, event routing, memory, and skills.
+- **Device & script extensions:** <LinkToSource relativePath="components/lua_modules/" /> — exposes displays, cameras, audio, buttons, GPIO, PWM, storage, and other peripherals to Lua and the Agent.
 
 ## Project directory layout
 

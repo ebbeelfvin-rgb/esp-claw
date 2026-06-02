@@ -5,6 +5,7 @@ description: Start chats, view status, and change settings from a browser on the
 
 import { Aside, Steps, Badge } from '@astrojs/starlight/components';
 import { Code, LinkCard } from 'starlight-theme-nova/components';
+import LinkToSource from '@/components/LinkToSource.astro';
 export const RestartBadge = () => <Badge text="Requires Restart" variant="tip" />;
 export const ApiBaseUrlHighlight = ['https://api.openai.com/v1', 'https://api.anthropic.com/v1', 'https://api.deepseek.com'];
 export const ApiBaseUrlExample = `https://api.openai.com/v1/chat/completions
@@ -12,7 +13,7 @@ https://api.anthropic.com/v1/messages
 https://api.deepseek.com`;
 
 `edge_agent` starts the Web Console after the Wi-Fi stack is ready, providing chat, status view, and configuration features.
-The Web Console implementation is located at `application/edge_agent/components/http_server/`.
+The Web Console implementation is located at <LinkToSource relativePath="application/edge_agent/components/http_server/" />.
 
 <Aside type="caution" title="Security notice">
   **`edge_agent` is not intended for production use. The `edge_agent` Web Console assumes a trusted environment and returns almost all information.**

@@ -4,6 +4,7 @@ description: Build and flash ESP-Claw from source.
 ---
 
 import { Steps, Aside, Badge } from '@astrojs/starlight/components';
+import LinkToSource from '@/components/LinkToSource.astro';
 
 
 <Aside>
@@ -29,7 +30,7 @@ import { Steps, Aside, Badge } from '@astrojs/starlight/components';
     ESP-Claw uses ESP Board Manager to support multiple development boards.
 
     To add other boards, see the [ESP Board Manager component](https://github.com/espressif/esp-gmf/blob/main/packages/esp_board_manager/docs/how_to_customize_board.md),
-    and put the board adaptation files in [`application/edge_agent/boards`](https://github.com/espressif/esp-claw/tree/master/application/edge_agent/boards).
+    and put the board adaptation files in <LinkToSource relativePath="application/edge_agent/boards/" />.
 
     Welcome to submit the board adaptation code to the ESP-Claw repository via Pull Request.
    </Aside>
@@ -54,7 +55,7 @@ import { Steps, Aside, Badge } from '@astrojs/starlight/components';
       idf.py gen-bmgr-config -c ./boards -l
       ```
 
-      Or check the `application/edge_agent/boards` directory.
+      Or check <LinkToSource relativePath="application/edge_agent/boards/" />.
    </Aside>
 
    <Aside type="note" title="Why set-target is not needed">
