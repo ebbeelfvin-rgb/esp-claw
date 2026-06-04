@@ -25,14 +25,23 @@ static const char *TAG = "claw_agent_mgr";
 #define CLAW_AGENT_MGR_MAX_AGENTS        (1 + CONFIG_CLAW_AGENT_MGR_MAX_SUBAGENTS)
 #define CLAW_AGENT_MGR_NOTIFY_TEXT_SIZE  768
 
+static const char *CLAW_AGENT_MGR_DEFAULT_ROOT_AGENT_SYSTEM_PROMPT =
+    "You are the root agent. Own the user-facing conversation, decide whether work "
+    "should be handled directly or delegated, spawn subagents only for bounded tasks, "
+    "track their results, and integrate their findings into the final response.";
+
+static const char *CLAW_AGENT_MGR_ROOT_AGENT_TYPE_PROMPT =
+    "Agent type: root. Coordinate the session, manage subagents when useful, and "
+    "deliver the final answer to the user.";
+
 static const char *CLAW_AGENT_MGR_DEFAULT_SUBAGENT_SYSTEM_PROMPT =
     "You are a subagent spawned by the root agent. Work only on the delegated task "
     "and keep your scope narrow. Do not manage, spawn, close, or inspect other agents. "
     "Use the tools available to you when needed, then report concise findings, decisions, "
     "and any blockers back to the root agent.";
 
-static const char *CLAW_AGENT_MGR_SUBAGENT_PROMPT_STACK_FMT =
-    "%s\n\n# Subagent Role\n%s\n\n# Subagent Type\n%s\n\nSelected agent_type: %s";
+static const char *CLAW_AGENT_MGR_PROMPT_STACK_FMT =
+    "%s\n\n# %s Role\n%s\n\n# %s Type\n%s\n\nSelected agent_type: %s";
 
 static const claw_agent_mgr_subagent_type_prompt_t s_default_subagent_type_prompts[] = {
     {
@@ -104,6 +113,7 @@ typedef struct {
     char *auth_type;
     char *max_tokens_field;
     char *system_prompt;
+    char *root_agent_system_prompt;
     char *subagent_system_prompt;
     claw_agent_mgr_subagent_type_prompt_t *subagent_type_prompts;
     size_t subagent_type_prompt_count;
@@ -149,6 +159,8 @@ static void claw_agent_mgr_free_prompt_config(void)
     }
     s_mgr.subagent_type_prompts = NULL;
     s_mgr.subagent_type_prompt_count = 0;
+    free(s_mgr.root_agent_system_prompt);
+    s_mgr.root_agent_system_prompt = NULL;
     free(s_mgr.subagent_system_prompt);
     s_mgr.subagent_system_prompt = NULL;
 }
@@ -193,25 +205,29 @@ static const char *claw_agent_mgr_find_subagent_type_prompt(const char *agent_ty
 }
 
 static char *claw_agent_mgr_format_prompt_stack(const char *base_prompt,
+                                                const char *role_name,
                                                 const char *role_prompt,
+                                                const char *type_name,
                                                 const char *type_prompt,
                                                 const char *agent_type)
 {
-    const char *type_name = (agent_type && agent_type[0]) ? agent_type : "subagent";
+    const char *selected_type = (agent_type && agent_type[0]) ? agent_type : "subagent";
     int needed;
     char *prompt = NULL;
 
-    if (!base_prompt || !role_prompt || !type_prompt) {
+    if (!base_prompt || !role_name || !role_prompt || !type_name || !type_prompt) {
         return NULL;
     }
 
     needed = snprintf(NULL,
                       0,
-                      CLAW_AGENT_MGR_SUBAGENT_PROMPT_STACK_FMT,
+                      CLAW_AGENT_MGR_PROMPT_STACK_FMT,
                       base_prompt,
+                      role_name,
                       role_prompt,
+                      type_name,
                       type_prompt,
-                      type_name);
+                      selected_type);
     if (needed < 0) {
         return NULL;
     }
@@ -221,11 +237,13 @@ static char *claw_agent_mgr_format_prompt_stack(const char *base_prompt,
     }
     if (snprintf(prompt,
                  (size_t)needed + 1U,
-                 CLAW_AGENT_MGR_SUBAGENT_PROMPT_STACK_FMT,
+                 CLAW_AGENT_MGR_PROMPT_STACK_FMT,
                  base_prompt,
+                 role_name,
                  role_prompt,
+                 type_name,
                  type_prompt,
-                 type_name) < 0) {
+                 selected_type) < 0) {
         free(prompt);
         return NULL;
     }
@@ -233,13 +251,23 @@ static char *claw_agent_mgr_format_prompt_stack(const char *base_prompt,
     return prompt;
 }
 
-static char *claw_agent_mgr_build_subagent_system_prompt(const claw_agent_mgr_agent_t *agent)
+static char *claw_agent_mgr_build_agent_system_prompt(const claw_agent_mgr_agent_t *agent)
 {
     if (!agent) {
         return NULL;
     }
+    if (agent->role == CLAW_AGENT_MGR_ROLE_ROOT) {
+        return claw_agent_mgr_format_prompt_stack(s_mgr.system_prompt,
+                                                 "Root Agent",
+                                                 s_mgr.root_agent_system_prompt,
+                                                 "Root Agent",
+                                                 CLAW_AGENT_MGR_ROOT_AGENT_TYPE_PROMPT,
+                                                 agent->agent_type);
+    }
     return claw_agent_mgr_format_prompt_stack(s_mgr.system_prompt,
+                                             "Subagent",
                                              s_mgr.subagent_system_prompt,
+                                             "Subagent",
                                              claw_agent_mgr_find_subagent_type_prompt(agent->agent_type),
                                              agent->agent_type);
 }
@@ -325,6 +353,14 @@ static esp_err_t claw_agent_mgr_copy_prompt_config(const claw_agent_mgr_config_t
     }
     if (config->subagent_type_prompt_count > 0 && !config->subagent_type_prompts) {
         return ESP_ERR_INVALID_ARG;
+    }
+
+    s_mgr.root_agent_system_prompt = claw_agent_mgr_strdup(
+                                         config->root_agent_system_prompt ?
+                                         config->root_agent_system_prompt :
+                                         CLAW_AGENT_MGR_DEFAULT_ROOT_AGENT_SYSTEM_PROMPT);
+    if (!s_mgr.root_agent_system_prompt) {
+        return ESP_ERR_NO_MEM;
     }
 
     s_mgr.subagent_system_prompt = claw_agent_mgr_strdup(
@@ -421,7 +457,7 @@ static void claw_agent_mgr_fill_core_config(claw_agent_mgr_agent_t *agent,
 static esp_err_t claw_agent_mgr_start_agent_core(claw_agent_mgr_agent_t *agent)
 {
     claw_core_config_t core_config = {0};
-    char *subagent_system_prompt = NULL;
+    char *agent_system_prompt = NULL;
     esp_err_t ret;
 
     if (!agent) {
@@ -432,22 +468,20 @@ static esp_err_t claw_agent_mgr_start_agent_core(claw_agent_mgr_agent_t *agent)
     }
 
     claw_agent_mgr_fill_core_config(agent, &core_config);
-    if (agent->role == CLAW_AGENT_MGR_ROLE_SUBAGENT) {
-        subagent_system_prompt = claw_agent_mgr_build_subagent_system_prompt(agent);
-        if (!subagent_system_prompt) {
-            snprintf(agent->last_error, sizeof(agent->last_error), "%s", esp_err_to_name(ESP_ERR_NO_MEM));
-            return ESP_ERR_NO_MEM;
-        }
-        core_config.system_prompt = subagent_system_prompt;
+    agent_system_prompt = claw_agent_mgr_build_agent_system_prompt(agent);
+    if (!agent_system_prompt) {
+        snprintf(agent->last_error, sizeof(agent->last_error), "%s", esp_err_to_name(ESP_ERR_NO_MEM));
+        return ESP_ERR_NO_MEM;
     }
+    core_config.system_prompt = agent_system_prompt;
     agent->cap_user_ctx.magic = CLAW_CAP_CORE_CALL_USER_CTX_MAGIC;
     agent->cap_user_ctx.core = &agent->core;
     agent->cap_user_ctx.caller = agent->role == CLAW_AGENT_MGR_ROLE_ROOT ?
                                  CLAW_CAP_CALLER_ROOT_AGENT : CLAW_CAP_CALLER_SUB_AGENT;
 
     ret = claw_core_create(&core_config, &agent->core);
-    free(subagent_system_prompt);
-    subagent_system_prompt = NULL;
+    free(agent_system_prompt);
+    agent_system_prompt = NULL;
     if (ret != ESP_OK) {
         snprintf(agent->last_error, sizeof(agent->last_error), "%s", esp_err_to_name(ret));
         return ret;

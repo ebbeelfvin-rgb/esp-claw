@@ -1030,6 +1030,9 @@ TEST_CASE("root text submit returns response through manager facade",
     TEST_ASSERT_NOT_NULL(strstr(response.text, "final:agent-mgr-test"));
     wait_for_record_text("chat:root:facade", CLAW_CORE_CONTEXT_RECORD_USER, "root hello");
     TEST_ASSERT_TRUE(test_system_capture_contains_text("test root system prompt"));
+    TEST_ASSERT_TRUE(test_system_capture_contains_text("# Root Agent Role"));
+    TEST_ASSERT_TRUE(test_system_capture_contains_text("Agent type: root."));
+    TEST_ASSERT_TRUE(test_system_capture_contains_text("Selected agent_type: root"));
     TEST_ASSERT_FALSE(test_system_capture_contains_text("# Subagent Role"));
     claw_core_response_free(&response);
 }
