@@ -95,7 +95,7 @@ STALKING (1500ms transition, super slow approach)
 
 | Mode | Transition | Use Case | Command |
 |------|-----------|----------|---------|
-| **Normal** | 600ms | Default gait | `C\|0\|30\|0\|600\|&` |
+| **Normal** | 600ms | Default gait | `C\|0\|50\|0\|600\|&` |
 | **Investigation** | 800ms | Slow scanning | `F\|±20\|0\|0\|0\|0\|30\|800\|&` |
 | **Stalking** | 1500ms | Careful approach | `C\|0\|30\|0\|1500\|&` |
 | ~~Fast~~ | ~~200ms~~ | ~~AVOID~~ | ~~DON'T USE~~ |
@@ -104,8 +104,9 @@ STALKING (1500ms transition, super slow approach)
 
 ## Sensor Integration
 
-- **Ultraljud**: Reads `sensor.sigge_avstand` from Home Assistant
-- **Real-time polling**: Every 200ms during MOVING_FORWARD
+- **Ultraljud**: Reads distance directly from kropp via UART (`A|bat|dist&` broadcast every 1s)
+- **No HA dependency**: Sensor data arrives over the same UART link used for movement commands
+- **Real-time polling**: `drain_rx()` called every 200ms during MOVING_FORWARD
 - **Strategic reading**: At key decision points (investigation, crossing, avoidance)
 
 ## Movement Commands (UART)
@@ -132,7 +133,7 @@ STALKING (1500ms transition, super slow approach)
 - **600ms transition** = natural, stable movement that feels organic
 - **800ms for investigation** = allows time for posture settling + sensor stabilization
 - **1500ms for stalking** = ultra-careful, deliberate approach (för intressanta encounters!)
-- **Poll interval (200ms)** = responsive without overloading HA API
+- **Poll interval (200ms)** = matchar kropp:s 200ms UART-broadcast (1Hz till HA/MQTT separat)
 
 ## Personality
 
