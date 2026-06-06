@@ -1,6 +1,6 @@
 -- hexapod.lua  – SIGGE body control via UART (GPIO47 TX / GPIO48 RX)
 -- Protocol: FUNCTION|data1|data2|...|dataN&
--- Coordinate system: Y+ = forward, X+ = right, Z+ = up (body center origin)
+-- Coordinate system: Y+ = forward, X+ = right
 -- C command: C|X|Y|Z&  where X=sideways(-50..50), Y=forward(-50..50), Z=rotation(0/1/2)
 
 local uart  = require("uart")
@@ -33,7 +33,7 @@ local actions = {}
 -- Gait/state commands
 function actions.crawl()  return send("B") end        -- enter walk-ready stance
 function actions.stop()   return send("C|0|0|0") end  -- stop all motion
-function actions.reset()  return send("O") end        -- lie down / rest position
+function actions.reset()  return send("O") end        -- 
 
 -- Movement: C|X|Y|Z&
 --   X = sideways translation  -50(left) .. 50(right)
@@ -59,8 +59,8 @@ function actions.strafe_left(a)
     return send(string.format("C|%d|0|0", -s))
 end
 
-function actions.turn_left()  return send("C|0|0|-1") end  -- CCW rotation
-function actions.turn_right() return send("C|0|0|1") end  -- CW rotation
+function actions.turn_left()  return send("C|0|0|1") end  -- CCW rotation
+function actions.turn_right() return send("C|0|0|2") end  -- CW rotation
 
 function actions.move(a)
     local x     = tonumber(a and a.x)     or 0
@@ -69,7 +69,7 @@ function actions.move(a)
     return send(string.format("C|%d|%d|%d", x, y, omega))
 end
 
--- Posture control: F|Yaw|Roll|Pitch|X|Y|Z&  (all -50..50 except Z: 0..30)
+-- Posture control: F|Yaw|Roll|Pitch|X|Y|Z&  (all -50..50 except Z: -10..30)
 function actions.pose(a)
     local yaw   = tonumber(a and a.yaw)   or 0
     local roll  = tonumber(a and a.roll)  or 0
@@ -135,23 +135,23 @@ function actions.dance(a)
     return "dance done"
 end
 
--- Walk for a set duration then stop
+-- Walk with optional duration. ms=0 (default): starts and keeps going until stop is called.
 function actions.walk_for(a)
     local x     = tonumber(a and a.x)     or 0
     local y     = tonumber(a and a.y)     or 50
     local omega = tonumber(a and a.omega) or 0
-    local ms    = tonumber(a and a.ms)    or 2000
-    actions.crawl()
-    delay.delay_ms(500)
+    local ms    = tonumber(a and a.ms)    or 0
     actions.move({x=x, y=y, omega=omega})
-    delay.delay_ms(ms)
-    actions.stop()
-    return "ok"
+    if ms > 0 then
+        delay.delay_ms(ms)
+        actions.stop()
+        return "walked " .. ms .. "ms"
+    end
+    return "walking"
 end
 
 -- Dispatch
-print("[hexapod] ARGS type=" .. type(ARGS) .. " value=" .. tostring(ARGS))
-local args = ARGS or {}
+local args = (type(args) == "table" and args) or {}
 local action_name = tostring(args.action or "")
 print("[hexapod] action=" .. action_name)
 
@@ -165,5 +165,6 @@ if not fn then
 end
 
 local result = fn(args)
+if u then pcall(u.close, u); u = nil end
 print("[hexapod] " .. action_name .. " -> " .. tostring(result))
 return result

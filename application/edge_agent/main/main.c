@@ -26,6 +26,7 @@
 #include "cap_im_wechat.h"
 #endif
 #include "app_config.h"
+#include "cap_mqtt_im.h"
 
 #define APP_ENABLE_MEM_LOG        (0)
 
@@ -426,6 +427,22 @@ void app_main(void)
 
     ESP_ERROR_CHECK(app_claw_init_storage_paths(s_claw_paths));
     ESP_ERROR_CHECK(app_claw_start(s_claw_config, s_claw_paths));
+
+    if (s_config->mqtt_broker[0] != '\0') {
+        cap_mqtt_im_config_t mqtt_cfg = {
+            .broker           = s_config->mqtt_broker,
+            .port             = atoi(s_config->mqtt_port),
+            .username         = s_config->mqtt_username,
+            .password         = s_config->mqtt_password,
+            .subscribe_topic  = s_config->mqtt_subscribe_topic,
+            .publish_topic    = s_config->mqtt_publish_topic,
+        };
+        esp_err_t mqtt_err = cap_mqtt_im_start(&mqtt_cfg);
+        if (mqtt_err != ESP_OK) {
+            ESP_LOGW(TAG, "MQTT IM start failed: %s", esp_err_to_name(mqtt_err));
+        }
+    }
+
 #if CONFIG_APP_CLAW_CAP_IM_LOCAL
     ESP_ERROR_CHECK(http_server_webim_bind_im());
 #endif

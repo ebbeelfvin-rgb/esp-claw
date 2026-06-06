@@ -54,6 +54,12 @@ typedef struct {
     char llm_visible_cap_groups[APP_CONFIG_STR_LEN];
     char enabled_lua_modules[APP_CONFIG_STR_LEN];
     char time_timezone[APP_CONFIG_TIMEZONE_LEN];
+    char mqtt_broker[APP_CONFIG_STR_LEN];
+    char mqtt_port[8];
+    char mqtt_username[64];
+    char mqtt_password[APP_CONFIG_STR_LEN];
+    char mqtt_subscribe_topic[APP_CONFIG_STR_LEN];
+    char mqtt_publish_topic[APP_CONFIG_STR_LEN];
 } app_config_t;
 
 esp_err_t app_config_init(void);

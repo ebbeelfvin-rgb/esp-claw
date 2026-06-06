@@ -76,6 +76,13 @@ static const config_field_def_t CONFIG_FIELDS[] = {
     CONFIG_FIELD("skills",       enabled_lua_modules),
 
     CONFIG_FIELD("time",         time_timezone),
+
+    CONFIG_FIELD("mqtt",         mqtt_broker),
+    CONFIG_FIELD("mqtt",         mqtt_port),
+    CONFIG_FIELD("mqtt",         mqtt_username),
+    CONFIG_FIELD("mqtt",         mqtt_password),
+    CONFIG_FIELD("mqtt",         mqtt_subscribe_topic),
+    CONFIG_FIELD("mqtt",         mqtt_publish_topic),
 };
 
 static const size_t CONFIG_FIELD_COUNT = sizeof(CONFIG_FIELDS) / sizeof(CONFIG_FIELDS[0]);

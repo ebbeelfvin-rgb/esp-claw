@@ -61,6 +61,12 @@ typedef struct {
 #define APP_DEFAULT_LLM_VISIBLE_CAP_GROUPS   ""
 #define APP_DEFAULT_ENABLED_LUA_MODULES      ""
 #define APP_DEFAULT_TIME_TIMEZONE            "CST-8"
+#define APP_DEFAULT_MQTT_BROKER              ""
+#define APP_DEFAULT_MQTT_PORT                "1883"
+#define APP_DEFAULT_MQTT_USERNAME            ""
+#define APP_DEFAULT_MQTT_PASSWORD            ""
+#define APP_DEFAULT_MQTT_SUBSCRIBE_TOPIC     "sigge/hjarna/in"
+#define APP_DEFAULT_MQTT_PUBLISH_TOPIC       "sigge/hjarna/out"
 
 static const app_config_field_t s_fields[] = {
     APP_CONFIG_FIELD(wifi_ssid, "wifi_ssid", APP_WIFI_SSID),
@@ -97,6 +103,12 @@ static const app_config_field_t s_fields[] = {
     APP_CONFIG_FIELD(llm_visible_cap_groups, "vis_cap_groups", APP_DEFAULT_LLM_VISIBLE_CAP_GROUPS),
     APP_CONFIG_FIELD(enabled_lua_modules, "en_lua_mods", APP_DEFAULT_ENABLED_LUA_MODULES),
     APP_CONFIG_FIELD(time_timezone, "time_timezone", APP_DEFAULT_TIME_TIMEZONE),
+    APP_CONFIG_FIELD(mqtt_broker, "mqtt_broker", APP_DEFAULT_MQTT_BROKER),
+    APP_CONFIG_FIELD(mqtt_port, "mqtt_port", APP_DEFAULT_MQTT_PORT),
+    APP_CONFIG_FIELD(mqtt_username, "mqtt_username", APP_DEFAULT_MQTT_USERNAME),
+    APP_CONFIG_FIELD(mqtt_password, "mqtt_password", APP_DEFAULT_MQTT_PASSWORD),
+    APP_CONFIG_FIELD(mqtt_subscribe_topic, "mqtt_sub_topic", APP_DEFAULT_MQTT_SUBSCRIBE_TOPIC),
+    APP_CONFIG_FIELD(mqtt_publish_topic, "mqtt_pub_topic", APP_DEFAULT_MQTT_PUBLISH_TOPIC),
 };
 
 // for backward compatibility, migrate from old settings to new settings
