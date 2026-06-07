@@ -39,6 +39,11 @@ Thumbs.db
 openspec
 AGENTS.md
 
+# Device runtime memory (written by the agent at runtime)
+application/edge_agent/fatfs_image/memory/memory_records.jsonl
+application/edge_agent/fatfs_image/memory/memory_digest.log
+application/edge_agent/fatfs_image/memory/memory_index.json
+
 # Docs
 docs/node_modules
 docs/public/d2
