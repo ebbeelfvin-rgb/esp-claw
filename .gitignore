@@ -43,6 +43,8 @@ AGENTS.md
 application/edge_agent/fatfs_image/memory/memory_records.jsonl
 application/edge_agent/fatfs_image/memory/memory_digest.log
 application/edge_agent/fatfs_image/memory/memory_index.json
+# Device identity — contains credentials, never commit
+application/edge_agent/fatfs_image/memory/identity.md
 
 # Docs
 docs/node_modules
