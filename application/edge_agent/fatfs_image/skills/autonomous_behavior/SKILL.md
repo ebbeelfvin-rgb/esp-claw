@@ -93,14 +93,14 @@ STALKING (1500ms transition, super slow approach)
 
 ## Critical Transition Values
 
-| Mode | Transition | Use Case | Command |
-|------|-----------|----------|---------|
+| Mode | Transition/pose_time | Use Case | Command |
+|------|----------------------|----------|---------|
 | **Normal** | 600ms | Default gait | `C\|0\|50\|0\|600\|&` |
 | **Investigation** | 800ms | Slow scanning | `F\|±20\|0\|0\|0\|0\|30\|800\|&` |
 | **Stalking** | 1500ms | Careful approach | `C\|0\|30\|0\|1500\|&` |
 | ~~Fast~~ | ~~200ms~~ | ~~AVOID~~ | ~~DON'T USE~~ |
 
-**⚠️ NEVER use 200ms** — it's too fast and breaks natural leg coordination!
+**⚠️ NEVER use T:200ms** — it's too fast and breaks natural leg coordination!
 
 ## Sensor Integration
 
@@ -123,6 +123,20 @@ STALKING (1500ms transition, super slow approach)
 | `F\|-20\|0\|0\|0\|0\|30\|&` | Look RIGHT, raised, current transition |
 | `F\|0\|0\|0\|0\|0\|0\|&` | Reset to neutral posture / also known as "crawl state" |
 
+## UART commands list
+
+| letter | args | variables | description |
+|--------|------|-----------|-------------|
+| **C** | vx \| vy \| rot | vel, pos, att | movement: vx right+/left-, vy forward+/backward-, rot 0=none 1=CCW 2=CW |
+| **F** | yaw \| roll \| pitch \| x \| y \| z | att.yaw \| att.roll \| att.pitch \| pos.x \| pos.y \| pos.z | posture: yaw=turn head, roll=tilt side, pitch=tilt front/back, x/y=shift, z=height |
+| **T** | ms | transition | gait step duration (default 600ms). Also settable as optional 4th arg in C: `C\|vx\|vy\|rot\|ms\|&` |
+| **P** | ms | pose_time | posture transition duration (default 200ms). Also settable as optional 7th arg in F: `F\|...\|z\|ms\|&` |
+| **B** | — | — | enter crawl/walk-ready stance |
+| **H** | r \| g \| b | rgb | ultrasonic LED color |
+| **K** | 1 \| id | — | run action group by id |
+| **K** | 2 | — | stop action group |
+
+
 ## Stop & Control
 
 - **MQTT STOP**: Publish `STOP` on `sigge/command` → triggers safe stop (both body + brain)
@@ -132,7 +146,7 @@ STALKING (1500ms transition, super slow approach)
 
 - **600ms transition** = natural, stable movement that feels organic
 - **800ms for investigation** = allows time for posture settling + sensor stabilization
-- **1500ms for stalking** = ultra-careful, deliberate approach (för intressanta encounters!)
+- **1500ms for stalking** = careful, deliberate approach (för intressanta encounters!)
 - **Poll interval (200ms)** = matchar kropp:s 200ms UART-broadcast (1Hz till HA/MQTT separat)
 
 ## Personality

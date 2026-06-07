@@ -19,9 +19,9 @@ Use this skill for adjusting the posture (attitude) of SIGGE's hexapod body via 
 
 | Script | Action |
 |---|---|
-| `/fatfs/scripts/hex_crawl.lua` | Låg grundposition (krypläge, bra på hårda golv) |
-| `/fatfs/scripts/hex_rest.lua` | Vila/Vilopositionen - preparerar kroppen för vila |
-| `/fatfs/scripts/hex_getup.lua` | Resa sig upp från vilotillståndet |
+| `/fatfs/scripts/hex_crawl.lua` | Grundposition / initiering- |
+| `/fatfs/scripts/hex_rest.lua` | Vila/Vilopositionen - lägger sig ned |
+| `/fatfs/scripts/hex_getup.lua` | Resa sig upp från 'Vila' |
 | `/fatfs/scripts/hex_cute.lua` | Söt/liten pose |
 | `/fatfs/scripts/hex_reset.lua` | Återställ till neutral position |
 

@@ -23,14 +23,18 @@ This ensures ALL movement stops, not just scripts on the brain.
 Topic: sigge/command
 Payload: STOP
 ```
+boot_button
+
 
 ## Usage
 Publish to MQTT:
 ```
 mosquitto_pub -t sigge/command -m STOP
 ```
-
 Or use HA automation/button to publish this message.
+```
+Or Physical trigger: Press the boot button on Sigge to publish the STOP command.
+```
 
 ## Status
 Ready to run as a background Lua daemon.
