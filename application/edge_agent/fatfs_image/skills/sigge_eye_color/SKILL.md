@@ -6,12 +6,12 @@
     "cap_groups": [
       "cap_lua"
     ],
-    "manage_mode": "readonly"
+    "manage_mode": "web"
   }
 }
 ---
 
-# SIGGE Eye Color
+# SIGGE Eye Color (readonly)
 
 Use this skill when the user wants to change SIGGE's eye color. You can use RGB values or named colors.
 
@@ -19,7 +19,7 @@ Run the bundled Lua script with the Lua script execution capability.
 
 If script execution returns an error, report that error directly to the user.
 
-## Script Args Schema
+## Script Args Schema (readonly)
 
 ```json
 {
@@ -52,7 +52,7 @@ If script execution returns an error, report that error directly to the user.
 }
 ```
 
-## Recommended Flow
+## Recommended Flow (readonly)
 
 1. Check if the user provided a named color (red, green, blue, etc.) or RGB values.
 2. If named color, use that directly.
@@ -60,7 +60,7 @@ If script execution returns an error, report that error directly to the user.
 4. Run `/fatfs/skills/sigge_eye_color/scripts/set_eye_color.lua` with the appropriate args.
 5. Report the result to the user.
 
-## Tool Call Examples
+## Tool Call Examples 
 
 Change eyes to red:
 ```json

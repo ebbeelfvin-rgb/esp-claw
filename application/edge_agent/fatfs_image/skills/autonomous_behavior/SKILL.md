@@ -19,8 +19,8 @@ Complete autonomous navigation with intelligent decision-making. SIGGE moves for
 MOVING_FORWARD (600ms transition - natural gait)
   ↓ [obstacle detected < 200mm]
 INVESTIGATING (800ms transition, dual-axis scanning)
-  ├─ Tittar LEFT (F|20|0|0|0|0|30|800|&)
-  ├─ Tittar RIGHT (F|-20|0|0|0|0|30|&)
+  ├─ Tittar LEFT (F|15|0|0|0|0|30|800|&)
+  ├─ Tittar RIGHT (F|-15|0|0|0|0|30|&)
   ├─ Jämför avstånd från båda sidor
   ├─ Om väg fri → TRY_CROSSING
   └─ Om väg blockerad → AVOIDING
@@ -67,8 +67,8 @@ STALKING (1500ms transition, super slow approach)
 ### 2. Intelligent Investigation
 - Detects obstacle at < 200mm
 - **Dual-axis scanning** with slow 800ms transition:
-  - Looks LEFT: `F|20|0|0|0|0|30|800|&`
-  - Looks RIGHT: `F|-20|0|0|0|0|30|&`
+  - Looks LEFT: `F|15|0|0|0|0|30|800|&`
+  - Looks RIGHT: `F|-15|0|0|0|0|30|&`
 - Compares both distances to decide best path
 - 700ms wait between scans for posture stabilization
 
@@ -118,10 +118,10 @@ STALKING (1500ms transition, super slow approach)
 | `C\|0\|-50\|0\|600\|&` | Backward + set transition 600ms |
 | `C\|0\|1\|0\|600\|&` | Turn LEFT + set transition 600ms |
 | `C\|0\|2\|0\|600\|&` | Turn RIGHT + set transition 600ms |
-| `C\|0\|30\|0\|1500\|&` | STALK MODE — super slow approach |
+| `C\|0\|30\|0\|1500\|&` | STALK MODE — slow approach |
 | `F\|20\|0\|0\|0\|0\|30\|800\|&` | Look LEFT, raised, slow transition |
 | `F\|-20\|0\|0\|0\|0\|30\|&` | Look RIGHT, raised, current transition |
-| `F\|0\|0\|0\|0\|0\|0\|&` | Reset to neutral posture / also known as "crawl state" |
+| `F\|0\|0\|0\|0\|0\|0\|&` | Reset to neutral posture |
 
 ## UART commands list
 
@@ -135,6 +135,7 @@ STALKING (1500ms transition, super slow approach)
 | **H** | r \| g \| b | rgb | ultrasonic LED color |
 | **K** | 1 \| id | — | run action group by id |
 | **K** | 2 | — | stop action group |
+| **O** | - | - |  full position / attitude reset |
 
 
 ## Stop & Control
